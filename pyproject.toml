@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "course-project-4-2023"
+version = "0.1.0"
+description = ""
+authors = ["Evgenii Ermak <djermak3000@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+pytest = "^7.4.2"
+accessify = "^0.3.1"
+datetime = "^5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
