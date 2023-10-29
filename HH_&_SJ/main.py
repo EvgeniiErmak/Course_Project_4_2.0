@@ -7,7 +7,7 @@ from api_superjob import SuperJob
 
 
 def job_vacancy() -> None:
-    """Основная функция программы"""
+    """Основная функция программы для поиска вакансий"""
 
     name: str = input("Введите вакансию: ")
 
@@ -22,21 +22,21 @@ def job_vacancy() -> None:
 
     combined_list: List[Dict] = hh_instance.load_vacancy() + sj_instance.load_vacancy()
 
-    # Фильтрация для исключения вакансий, где "Зарплата до" равна 0 или отсутствует
     combined_list = [vacancy for vacancy in combined_list if vacancy.get("salary_to") not in (0, None)]
-
     combined_list = sorted(combined_list, key=itemgetter("salary_to"), reverse=True)
 
     with open("vacancies.json", "w", encoding="utf-8") as file:
         json.dump(combined_list, file, ensure_ascii=False, indent=2)
 
     platform_choice: str = input(
-        "Выберите платформу для поиска: (1 - HH, 2 - SuperJob, 3 - Обе) "
+        "Выберите платформу для поиска: (1 - HH, 2 - SuperJob, 3 - Обе): "
     )
+    platform_choice = platform_choice if platform_choice in ["1", "2"] else "3"
 
     filter_choice: str = input(
         "Выберите фильтрацию (1 - Топ-N вакансий по зарплате, 2 - Сортировка по зарплате, 3 - Нет фильтрации): "
     )
+    filter_choice = filter_choice if filter_choice in ["1", "2"] else "3"
 
     while True:
         if filter_choice == "1":
@@ -63,8 +63,7 @@ def job_vacancy() -> None:
 
 
 def display_vacancy_info(vacancy: Dict) -> None:
-    """Вывод информации о вакансии"""
-
+    """Отображение информации о вакансии"""
     print(
         f"\nПлатформа: {vacancy['platform']}\n"
         f"ID вакансии: {vacancy['id']}\n"
@@ -79,27 +78,19 @@ def display_vacancy_info(vacancy: Dict) -> None:
 
 
 def display_vacancies(vacancies: List[Dict], platform_choice: str) -> None:
-    """Отображает вакансии в соответствии с выбором пользователя"""
-
+    """Отображение вакансий в соответствии с выбором пользователя"""
     while True:
         if platform_choice == "1":
-            hh_vacancies: List[Dict] = [
-                vacancy for vacancy in vacancies if vacancy["platform"] == "HH"
-            ]
+            hh_vacancies: List[Dict] = [vacancy for vacancy in vacancies if vacancy["platform"] == "HH"]
             for platform in hh_vacancies:
                 display_vacancy_info(platform)
-
         elif platform_choice == "2":
-            sj_vacancies: List[Dict] = [
-                vacancy for vacancy in vacancies if vacancy["platform"] == "SuperJob"
-            ]
+            sj_vacancies: List[Dict] = [vacancy for vacancy in vacancies if vacancy["platform"] == "SuperJob"]
             for platform in sj_vacancies:
                 display_vacancy_info(platform)
-
         elif platform_choice == "3":
             for platform in vacancies:
                 display_vacancy_info(platform)
-
         next_page: str = input("Желаете перейти на следующую страницу? (да/нет): ")
         if next_page.lower() != "да":
             break
